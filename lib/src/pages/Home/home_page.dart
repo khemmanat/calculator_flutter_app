@@ -27,7 +27,8 @@ class _HomePageState extends State<HomePage> {
                 color: Colors.red,
                 child: const Text('เครื่องคิดเลข',
                     style: TextStyle(fontSize: 20, color: Colors.white)),
-                onPressed: () => Navigator.pushNamed(context, AppRoute.home),
+                onPressed: () =>
+                    Navigator.pushNamed(context, AppRoute.calculatorPage),
               ),
             ),
           ],

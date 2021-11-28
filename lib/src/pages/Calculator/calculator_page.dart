@@ -10,8 +10,8 @@ class CalculatorPage extends StatefulWidget {
 }
 
 class _CalculatorPageState extends State<CalculatorPage> {
-  var input = 0;
-  var result = 0;
+  var input = '';
+  var result = '';
   // Array of button
   final List<String> calButtons = [
     'C',
@@ -44,27 +44,31 @@ class _CalculatorPageState extends State<CalculatorPage> {
         body: Column(
           children: <Widget>[
             Expanded(
+                flex: 1,
                 child: Container(
                     child: Column(children: <Widget>[
-              Container(
-                padding: const EdgeInsets.all(10),
-                child: Text(
-                  '$input',
-                  style: const TextStyle(fontSize: 50),
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.all(10),
-                child: Text(
-                  '$result',
-                  style: const TextStyle(fontSize: 50),
-                ),
-              ),
-            ]))),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      input,
+                      style: const TextStyle(fontSize: 18),
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    alignment: Alignment.bottomRight,
+                    child: Text(
+                      result,
+                      style: const TextStyle(fontSize: 30),
+                    ),
+                  ),
+                ]))),
             Expanded(
                 flex: 3,
                 child: Container(
                     child: GridView.builder(
+                        itemCount: calButtons.length,
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 4),
@@ -74,8 +78,8 @@ class _CalculatorPageState extends State<CalculatorPage> {
                             return CalculatorButton(
                               buttonTapped: () {
                                 setState(() {
-                                  input = 0;
-                                  result = 0;
+                                  input = '';
+                                  result = '0';
                                 });
                               },
                               textButton: calButtons[index],
@@ -92,7 +96,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                             return CalculatorButton(
                               buttonTapped: () {
                                 setState(() {
-                                  input += calButtons[index] as int;
+                                  input += calButtons[index];
                                 });
                               },
                               textButton: calButtons[index],
@@ -103,8 +107,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                             return CalculatorButton(
                               buttonTapped: () {
                                 setState(() {
-                                  input = input.toString().substring(
-                                      0, input.toString().length - 1) as int;
+                                  input = input.substring(0, input.length - 1);
                                 });
                               },
                               textButton: calButtons[index],
@@ -126,7 +129,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                             return CalculatorButton(
                               buttonTapped: () {
                                 setState(() {
-                                  input += calButtons[index] as int;
+                                  input += calButtons[index];
                                 });
                               },
                               textButton: calButtons[index],
@@ -156,13 +159,13 @@ class _CalculatorPageState extends State<CalculatorPage> {
 
   // the function that calculate the result
   void calculateFromEqual() {
-    String finaluserinput = input as String;
-    finaluserinput.replaceAll('x', '*');
+    String finaluserinput = input;
+    finaluserinput = input.replaceAll('x', '*');
 
     Parser p = Parser();
     Expression exp = p.parse(finaluserinput);
     ContextModel cm = ContextModel();
     double eval = exp.evaluate(EvaluationType.REAL, cm);
-    result = eval.toString() as int;
+    result = eval.toString();
   }
 }
