@@ -13,7 +13,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
   var input = 0;
   var result = 0;
   // Array of button
-  final List<String> buttons = [
+  final List<String> calButtons = [
     'C',
     '+/-',
     '%',
@@ -65,8 +65,9 @@ class _CalculatorPageState extends State<CalculatorPage> {
                 flex: 3,
                 child: Container(
                     child: GridView.builder(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 4),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 4),
                         itemBuilder: (BuildContext context, int index) {
                           // For Clearing the Button
                           if (index == 0) {
@@ -77,13 +78,13 @@ class _CalculatorPageState extends State<CalculatorPage> {
                                   result = 0;
                                 });
                               },
-                              textButton: buttons[index],
+                              textButton: calButtons[index],
                               color: Colors.blue[50],
                               colorText: Colors.black,
                             );
                           } else if (index == 1) {
                             return CalculatorButton(
-                              textButton: buttons[index],
+                              textButton: calButtons[index],
                               color: Colors.blue[50],
                               colorText: Colors.black,
                             );
@@ -91,10 +92,10 @@ class _CalculatorPageState extends State<CalculatorPage> {
                             return CalculatorButton(
                               buttonTapped: () {
                                 setState(() {
-                                  input += buttons[index] as int;
+                                  input += calButtons[index] as int;
                                 });
                               },
-                              textButton: buttons[index],
+                              textButton: calButtons[index],
                               color: Colors.blue[50],
                               colorText: Colors.black,
                             );
@@ -102,10 +103,11 @@ class _CalculatorPageState extends State<CalculatorPage> {
                             return CalculatorButton(
                               buttonTapped: () {
                                 setState(() {
-                                  input = input.substring(0, input.length - 1);
+                                  input = input.toString().substring(
+                                      0, input.toString().length - 1) as int;
                                 });
                               },
-                              textButton: buttons[index],
+                              textButton: calButtons[index],
                               color: Colors.blue[50],
                               colorText: Colors.black,
                             );
@@ -113,35 +115,54 @@ class _CalculatorPageState extends State<CalculatorPage> {
                             return CalculatorButton(
                               buttonTapped: () {
                                 setState(() {
-                                  input = input * 10 + 7;
+                                  calculateFromEqual();
                                 });
                               },
-                              textButton: buttons[index],
+                              textButton: calButtons[index],
                               color: Colors.blue[50],
                               colorText: Colors.black,
                             );
-                          } else {}
+                          } else {
+                            return CalculatorButton(
+                              buttonTapped: () {
+                                setState(() {
+                                  input += calButtons[index] as int;
+                                });
+                              },
+                              textButton: calButtons[index],
+                              color: operatorVerify(calButtons[index])
+                                  ? Colors.blueAccent
+                                  : Colors.white,
+                              colorText: operatorVerify(calButtons[index])
+                                  ? Colors.white
+                                  : Colors.black,
+                            );
+                          }
                         })))
           ],
         ));
   }
 
-  // bool operatorVerify(String x) {
-  //   if (x == '/' || x == 'x' || x == '-' || x == '+' || x == '=') {
-  //     return true;
-  //   }
-  //   return false;
-  // }
+  bool operatorVerify(String sign) {
+    if (sign == '/' ||
+        sign == 'x' ||
+        sign == '-' ||
+        sign == '+' ||
+        sign == '=') {
+      return true;
+    }
+    return false;
+  }
 
   // the function that calculate the result
-  // void calculateFromEqual() {
-  //   String finaluserinput = input as String;
-  //   finaluserinput = input.replaceAll('x', '*') as String;
+  void calculateFromEqual() {
+    String finaluserinput = input as String;
+    finaluserinput.replaceAll('x', '*');
 
-  //   Parser p = Parser();
-  //   Expression exp = p.parse(finaluserinput);
-  //   ContextModel cm = ContextModel();
-  //   double eval = exp.evaluate(EvaluationType.REAL, cm);
-  //   result = eval.toString() as int;
-  // }
+    Parser p = Parser();
+    Expression exp = p.parse(finaluserinput);
+    ContextModel cm = ContextModel();
+    double eval = exp.evaluate(EvaluationType.REAL, cm);
+    result = eval.toString() as int;
+  }
 }
